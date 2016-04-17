@@ -111,8 +111,8 @@ function  canvasApp() {
     // add our events. Up and down are for dragging,
     // double click is for making new boxes
     canvas.onmousedown = myDown;
-    // canvas.onmouseup = myUp;
-    // canvas.ondblclick = myDblClick;
+    canvas.onmouseup = myUp;
+    //canvas.ondblclick = myDblClick;
     
     // add custom initialization here:
     
@@ -154,7 +154,7 @@ function  canvasApp() {
 
   // Happens when the mouse is clicked in the canvas
 function myDown(e){
-  //getMouse(e);
+  getMouse(e);
   clear(gctx); // clear the ghost canvas from its last use
 
   // run through all the boxes
@@ -172,8 +172,8 @@ function myDown(e){
       mySel = boxes[i];
       offsetx = mx - mySel.x;
       offsety = my - mySel.y;
-      mySel.x = mx - offsetx;
-      mySel.y = my - offsety;
+      //mySel.x = mx - offsetx;
+      //mySel.y = my - offsety;
       isDrag = true;
       canvas.onmousemove = myMove;
       invalidate();
@@ -190,6 +190,24 @@ function myDown(e){
   invalidate();
 }
 
+// Happens when the mouse is moving inside the canvas
+function myMove(e){
+  if (isDrag){
+    getMouse(e);
+    
+    mySel.x = mx - offsetx;
+    mySel.y = my - offsety;   
+    
+    // something is changing position so we better invalidate the canvas!
+    invalidate();
+  }
+}
+
+function myUp(){
+  isDrag = false;
+  canvas.onmousemove = null;
+}
+
   function invalidate() {
     canvasValid = false;
   }
@@ -204,6 +222,11 @@ function myDown(e){
     }
     ctx.fillRect(box.x, box.y, box.w, box.h);
     canvasValid = true;
+  }
+
+  function getMouse(e) {
+    mx = e.clientX;
+    my = e.clientY;
   }
 
 
